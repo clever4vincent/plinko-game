@@ -22,7 +22,7 @@
       {balanceFormatted}
     </span>
   </div>
-  <Popover.Root>
+  <!-- <Popover.Root>
     <Popover.Trigger
       class="bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500 active:bg-blue-700 sm:text-base"
     >
@@ -53,5 +53,5 @@
         {/if}
       {/snippet}
     </Popover.Content>
-  </Popover.Root>
+  </Popover.Root> -->
 </div>

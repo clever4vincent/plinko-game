@@ -266,7 +266,7 @@
     <div class="flex items-center gap-4 border-t border-slate-600 pt-3">
       <Tooltip.Provider delayDuration={0} disableCloseOnTriggerClick>
         <!-- Settings Button -->
-        <Tooltip.Root>
+        <!-- <Tooltip.Root>
           <Tooltip.Trigger
             onclick={() => ($isGameSettingsOpen = !$isGameSettingsOpen)}
             class={twMerge(
@@ -292,7 +292,7 @@
               {/if}
             {/snippet}
           </Tooltip.Content>
-        </Tooltip.Root>
+        </Tooltip.Root> -->
 
         <!-- Live Stats Button -->
         <Tooltip.Root>

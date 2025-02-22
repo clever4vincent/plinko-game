@@ -121,7 +121,7 @@ class PlinkoEngine {
 
     this.engine = Matter.Engine.create({
       timing: {
-        timeScale: 1,
+        timeScale: 2,
       },
     });
     this.render = Matter.Render.create({

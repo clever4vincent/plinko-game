@@ -12,7 +12,7 @@ import { derived, writable } from 'svelte/store';
 
 export const plinkoEngine = writable<PlinkoEngine | null>(null);
 
-export const betAmount = writable<number>(1);
+export const betAmount = writable<number>(100);
 
 export const betAmountOfExistingBalls = writable<BetAmountOfExistingBalls>({});
 
