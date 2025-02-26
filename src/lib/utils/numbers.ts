@@ -97,5 +97,10 @@ export function formatCurrency(value: number): string {
  * Gets a random number in the range of `[min, max]`.
  */
 export function getRandomBetween(min: number, max: number): number {
+  // return 345.00039;
+  // return 380.1;
+  // return 397.4075450066644;
+  // console.log('getRandomBetween', min, max);
+  // console.log('getRandomBetween', (min + max) / 2);
   return min + Math.random() * (max - min);
 }

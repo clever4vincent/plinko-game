@@ -5,6 +5,7 @@ import {
   riskLevel,
   betAmount,
   balance,
+  historyMap,
   betAmountOfExistingBalls,
   totalProfitHistory,
 } from '$lib/stores/game';
@@ -121,7 +122,7 @@ class PlinkoEngine {
 
     this.engine = Matter.Engine.create({
       timing: {
-        timeScale: 2,
+        timeScale: 1,
       },
     });
     this.render = Matter.Render.create({
@@ -186,33 +187,49 @@ class PlinkoEngine {
     const ballOffsetRangeX = this.pinDistanceX * 0.8;
     const ballRadius = this.pinRadius * 2;
     const { friction, frictionAirByRowCount } = PlinkoEngine.ballFrictions;
-
-    const ball = Matter.Bodies.circle(
-      getRandomBetween(
-        this.canvas.width / 2 - ballOffsetRangeX,
-        this.canvas.width / 2 + ballOffsetRangeX,
-      ),
-      0,
-      ballRadius,
-      {
-        restitution: 0.8, // Bounciness
-        friction,
-        frictionAir: frictionAirByRowCount[this.rowCount],
-        collisionFilter: {
-          category: PlinkoEngine.BALL_CATEGORY,
-          mask: PlinkoEngine.PIN_CATEGORY, // Collide with pins only, but not other balls
-        },
-        render: {
-          fillStyle: '#ff0000',
-        },
-      },
+    const startX = getRandomBetween(
+      this.canvas.width / 2 - ballOffsetRangeX,
+      this.canvas.width / 2 + ballOffsetRangeX,
     );
+    const ball = Matter.Bodies.circle(startX, 0, ballRadius, {
+      restitution: 0.8, // Bounciness
+      friction,
+      frictionAir: frictionAirByRowCount[this.rowCount],
+      collisionFilter: {
+        category: PlinkoEngine.BALL_CATEGORY,
+        mask: PlinkoEngine.PIN_CATEGORY, // Collide with pins only, but not other balls
+      },
+      render: {
+        fillStyle: '#ff0000',
+      },
+    });
+    ball.startX = startX;
     Matter.Composite.add(this.engine.world, ball);
 
     betAmountOfExistingBalls.update((value) => ({ ...value, [ball.id]: this.betAmount }));
     balance.update((balance) => balance - this.betAmount);
   }
 
+  dropBallWithX(x: number) {
+    const ballOffsetRangeX = this.pinDistanceX * 0.8;
+    const ballRadius = this.pinRadius * 2;
+    const { friction, frictionAirByRowCount } = PlinkoEngine.ballFrictions;
+    const ball = Matter.Bodies.circle(x, 0, ballRadius, {
+      restitution: 0.8, // Bounciness
+      friction,
+      frictionAir: frictionAirByRowCount[this.rowCount],
+      collisionFilter: {
+        category: PlinkoEngine.BALL_CATEGORY,
+        mask: PlinkoEngine.PIN_CATEGORY, // Collide with pins only, but not other balls
+      },
+      render: {
+        fillStyle: '#ff0000',
+      },
+    });
+    Matter.Composite.add(this.engine.world, ball);
+    betAmountOfExistingBalls.update((value) => ({ ...value, [ball.id]: this.betAmount }));
+    balance.update((balance) => balance - this.betAmount);
+  }
   /**
    * Total width of all bins as percentage of the canvas width.
    */
@@ -279,6 +296,17 @@ class PlinkoEngine {
         return [...history, lastTotalProfit + profit];
       });
       balance.update((balance) => balance + payoutValue);
+      const historyMapVal = get(historyMap);
+      if (!historyMapVal.has(binIndex)) {
+        historyMapVal.set(binIndex, []);
+      }
+      historyMapVal.get(binIndex);
+      // 新增去重判断
+      const currentArray = historyMapVal.get(binIndex);
+      if (!currentArray!.includes(ball.startX) && currentArray!.length < 100) {
+        currentArray!.push(ball.startX);
+      }
+      // console.log(this.historyMap);
     }
 
     Matter.Composite.remove(this.engine.world, ball);

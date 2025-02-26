@@ -7,8 +7,13 @@
   import Sidebar from '$lib/components/Sidebar';
   import { setBalanceFromLocalStorage, writeBalanceToLocalStorage } from '$lib/utils/game';
   import GitHubLogo from 'phosphor-svelte/lib/GithubLogo';
-
+  import { page } from '$app/stores';
+  // 监听 URL 参数
+  // $: gameId = $page.params.id; // 例如 /game/123 -> gameId = "123"
+  // console.log(gameId);
   $effect(() => {
+    let token = $page.url.searchParams.get('token');
+
     setBalanceFromLocalStorage();
   });
 </script>

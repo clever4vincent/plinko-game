@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Select } from '$lib/components/ui';
   import { autoBetIntervalMs, rowCountOptions } from '$lib/constants/game';
+  import CircleNotch from 'phosphor-svelte/lib/CircleNotch';
   import {
     balance,
     betAmount,
@@ -19,13 +20,14 @@
   import Question from 'phosphor-svelte/lib/Question';
   import type { FormEventHandler } from 'svelte/elements';
   import { twMerge } from 'tailwind-merge';
-
+  import axios from 'axios';
   let betMode: BetMode = $state(BetMode.MANUAL);
 
   /**
    * When `betMode` is `AUTO`, the number of bets to be placed. Zero means infinite bets.
    */
   let autoBetInput = $state(0);
+  let isBetLoading = $state(false);
 
   /**
    * Number of auto bets remaining when `betMode` is `AUTO`.
@@ -37,12 +39,16 @@
 
   let autoBetInterval: ReturnType<typeof setInterval> | null = $state(null);
 
-  let isBetAmountNegative = $derived($betAmount < 0);
+  let isBetAmountNegative = $derived($betAmount <= 0);
   let isBetExceedBalance = $derived($betAmount > $balance);
   let isAutoBetInputNegative = $derived(autoBetInput < 0);
 
   let isDropBallDisabled = $derived(
-    $plinkoEngine === null || isBetAmountNegative || isBetExceedBalance || isAutoBetInputNegative,
+    $plinkoEngine === null ||
+      isBetAmountNegative ||
+      isBetExceedBalance ||
+      isAutoBetInputNegative ||
+      (!autoBetInterval && isBetLoading),
   );
 
   let hasOutstandingBalls = $derived(Object.keys($betAmountOfExistingBalls).length > 0);
@@ -56,15 +62,30 @@
       $betAmount = parsedValue;
     }
   };
-
+  async function fetchData() {
+    isBetLoading = true;
+    try {
+      const response = await axios.get('http://192.168.110.50:8005/game?bet=100');
+      let data = response.data;
+      $plinkoEngine?.dropBallWithX(data.data.result);
+      // console.log(data.data.result);
+    } finally {
+      isBetLoading = false;
+    }
+  }
   function resetAutoBetInterval() {
     if (autoBetInterval !== null) {
       clearInterval(autoBetInterval);
       autoBetInterval = null;
     }
   }
-
+  async function startDropBall() {
+    fetchData();
+  }
   function autoBetDropBall() {
+    if (isBetLoading) {
+      return;
+    }
     if (isBetExceedBalance) {
       resetAutoBetInterval();
       return;
@@ -72,13 +93,13 @@
 
     // Infinite mode
     if (autoBetsLeft === null) {
-      $plinkoEngine?.dropBall();
+      startDropBall();
       return;
     }
 
     // Finite mode
     if (autoBetsLeft > 0) {
-      $plinkoEngine?.dropBall();
+      startDropBall();
       autoBetsLeft -= 1;
     }
     if (autoBetsLeft === 0 && autoBetInterval !== null) {
@@ -96,10 +117,12 @@
       autoBetInput = parsedValue;
     }
   };
-
-  function handleBetClick() {
+  function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  async function handleBetClick() {
     if (betMode === BetMode.MANUAL) {
-      $plinkoEngine?.dropBall();
+      startDropBall();
     } else if (autoBetInterval === null) {
       autoBetsLeft = autoBetInput === 0 ? null : autoBetInput;
       autoBetInterval = setInterval(autoBetDropBall, autoBetIntervalMs);
@@ -147,7 +170,7 @@
           disabled={autoBetInterval !== null}
           type="number"
           min="0"
-          step="0.01"
+          step="10"
           inputmode="decimal"
           class={twMerge(
             'w-full rounded-l-md border-2 border-slate-600 bg-slate-900 py-2 pr-2 pl-7 text-sm text-white transition-colors hover:cursor-pointer hover:not-disabled:border-slate-500 focus:border-slate-500 focus:outline-hidden  disabled:cursor-not-allowed disabled:opacity-50',
@@ -185,7 +208,7 @@
     {/if}
   </div>
 
-  <div>
+  <!-- <div >
     <label for="riskLevel" class="text-sm font-medium text-slate-300">Risk</label>
     <Select
       id="riskLevel"
@@ -193,9 +216,9 @@
       items={riskLevels}
       disabled={hasOutstandingBalls || autoBetInterval !== null}
     />
-  </div>
+  </div> -->
 
-  <div>
+  <!-- <div>
     <label for="rowCount" class="text-sm font-medium text-slate-300">Rows</label>
     <Select
       id="rowCount"
@@ -203,7 +226,7 @@
       items={rowCounts}
       disabled={hasOutstandingBalls || autoBetInterval !== null}
     />
-  </div>
+  </div> -->
 
   {#if betMode === BetMode.AUTO}
     <div>
@@ -249,12 +272,15 @@
     onclick={handleBetClick}
     disabled={isDropBallDisabled}
     class={twMerge(
-      'touch-manipulation rounded-md bg-green-500 py-3 font-semibold text-slate-900 transition-colors hover:bg-green-400 active:bg-green-600 disabled:bg-neutral-600 disabled:text-neutral-400',
+      'flex touch-manipulation items-center justify-center rounded-md bg-green-500 py-3 font-semibold text-slate-900 transition-colors hover:bg-green-400 active:bg-green-600 disabled:bg-neutral-600 disabled:text-neutral-400',
       autoBetInterval !== null && 'bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-600',
     )}
   >
     {#if betMode === BetMode.MANUAL}
       Drop Ball
+      {#if isBetLoading == true}
+        <CircleNotch class="text-white-500 ml-1 inline-block size-5 animate-spin" weight="bold" />
+      {/if}
     {:else if autoBetInterval === null}
       Start Autobet
     {:else}
