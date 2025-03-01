@@ -14,7 +14,7 @@ import { getRandomBetween } from '$lib/utils/numbers';
 import Matter, { type IBodyDefinition } from 'matter-js';
 import { get } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
-
+import oIcon from '$lib/assets/ooo.png';
 type BallFrictionsByRowCount = {
   friction: NonNullable<IBodyDefinition['friction']>;
   frictionAirByRowCount: Record<RowCount, NonNullable<IBodyDefinition['frictionAir']>>;
@@ -349,6 +349,11 @@ class PlinkoEngine {
           isStatic: true,
           render: {
             fillStyle: '#ffffff',
+            // sprite: {
+            //   texture: oIcon,
+            //   xScale: 0.1,
+            //   yScale: 0.1,
+            // },
           },
           collisionFilter: {
             category: PIN_CATEGORY,

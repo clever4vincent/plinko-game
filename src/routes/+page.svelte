@@ -8,12 +8,70 @@
   import { setBalanceFromLocalStorage, writeBalanceToLocalStorage } from '$lib/utils/game';
   import GitHubLogo from 'phosphor-svelte/lib/GithubLogo';
   import { page } from '$app/stores';
+
   // 监听 URL 参数
   // $: gameId = $page.params.id; // 例如 /game/123 -> gameId = "123"
   // console.log(gameId);
   $effect(() => {
     let token = $page.url.searchParams.get('token');
-
+    // 老虎机 Demo
+    // const myLucky = new SlotMachine('#my-lucky', {
+    //   width: '768px',
+    //   height: '300px',
+    //   blocks: [
+    //     { padding: '10px', background: '#869cfa' },
+    //     { padding: '10px', background: '#e9e8fe' },
+    //   ],
+    //   slots: [{ order: [0, 1] }, { order: [0, 1] }, { order: [0, 1] }, { order: [0, 1] }],
+    //   prizes: [{ fonts: [{ text: '6', top: '15%' }] }, { fonts: [{ text: '9', top: '15%' }] }],
+    //   defaultStyle: {
+    //     borderRadius: Infinity,
+    //     background: '#bac5ee',
+    //     fontSize: '64px',
+    //     lineHeight: '80px',
+    //     fontColor: '#fff',
+    //   },
+    //   defaultConfig: {
+    //     rowSpacing: '25px',
+    //     colSpacing: '10px',
+    //   },
+    // });
+    // myLucky.play();
+    // setTimeout(() => {
+    //   // 结束游戏
+    //   myLucky.stop([1, 1, 1, 1]);
+    // }, 1000);
+    // 大转盘简易 Demo
+    // const myLucky = new LuckyWheel('#my-lucky', {
+    //   width: '300px',
+    //   height: '300px',
+    //   blocks: [{ padding: '13px', background: '#617df2' }],
+    //   prizes: [
+    //     { fonts: [{ text: '0', top: '10%' }], angle: 30, background: '#e9e8fe' },
+    //     { fonts: [{ text: '1', top: '10%' }], angle: 30, background: '#b8c5f2' },
+    //     { fonts: [{ text: '2', top: '10%' }], angle: 50, background: '#e9e8fe' },
+    //     { fonts: [{ text: '3', top: '10%' }], angle: 80, background: '#b8c5f2' },
+    //     { fonts: [{ text: '4', top: '10%' }], angle: 80, background: '#e9e8fe' },
+    //     { fonts: [{ text: '5', top: '10%' }], angle: 90, background: '#b8c5f2' },
+    //   ],
+    //   buttons: [
+    //     {
+    //       radius: '20%',
+    //       background: '#8a9bf3',
+    //       pointer: true,
+    //       fonts: [{ text: 'start', top: '-10px', fontSize: '16px' }],
+    //     },
+    //   ],
+    //   start: function () {
+    //     // 开始游戏
+    //     myLucky.play();
+    //     // 使用定时器模拟接口
+    //     setTimeout(() => {
+    //       // 结束游戏
+    //       myLucky.stop(0);
+    //     }, 3000);
+    //   },
+    // });
     setBalanceFromLocalStorage();
   });
 </script>
@@ -40,7 +98,7 @@
       </div>
     </div>
   </div>
-
+  <div id="my-lucky"></div>
   <!-- <SettingsWindow /> -->
   <LiveStatsWindow />
 </div>

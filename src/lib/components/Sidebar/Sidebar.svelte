@@ -6,7 +6,10 @@
     balance,
     betAmount,
     betAmountOfExistingBalls,
+    gameNo,
     plinkoEngine,
+    luckyWheelRunning,
+    luckyWheelEngine,
     riskLevel,
     rowCount,
   } from '$lib/stores/game';
@@ -20,7 +23,10 @@
   import Question from 'phosphor-svelte/lib/Question';
   import type { FormEventHandler } from 'svelte/elements';
   import { twMerge } from 'tailwind-merge';
-  import axios from 'axios';
+  import request from '$lib/utils/request';
+
+  import { toast } from '@zerodevx/svelte-toast';
+
   let betMode: BetMode = $state(BetMode.MANUAL);
 
   /**
@@ -43,16 +49,29 @@
   let isBetExceedBalance = $derived($betAmount > $balance);
   let isAutoBetInputNegative = $derived(autoBetInput < 0);
 
-  let isDropBallDisabled = $derived(
-    $plinkoEngine === null ||
-      isBetAmountNegative ||
-      isBetExceedBalance ||
-      isAutoBetInputNegative ||
-      (!autoBetInterval && isBetLoading),
-  );
+  let isDropBallDisabled = $derived(getBallDisabledConditions());
 
   let hasOutstandingBalls = $derived(Object.keys($betAmountOfExistingBalls).length > 0);
 
+  function getBallDisabledConditions() {
+    if ($gameNo === 1) {
+      return (
+        $plinkoEngine === null ||
+        isBetAmountNegative ||
+        isBetExceedBalance ||
+        isAutoBetInputNegative ||
+        (!autoBetInterval && isBetLoading)
+      );
+    } else if ($gameNo === 2) {
+      return (
+        $luckyWheelRunning ||
+        isBetAmountNegative ||
+        isBetExceedBalance ||
+        isAutoBetInputNegative ||
+        (!autoBetInterval && isBetLoading)
+      );
+    }
+  }
   const handleBetAmountFocusOut: FormEventHandler<HTMLInputElement> = (e) => {
     const parsedValue = parseFloat(e.currentTarget.value.trim());
     if (isNaN(parsedValue)) {
@@ -65,9 +84,20 @@
   async function fetchData() {
     isBetLoading = true;
     try {
-      const response = await axios.get('http://192.168.110.50:8005/game?bet=100');
+      const response = await request.get('games/plinko/bet', { bet: $betAmount, user: '123456' });
       let data = response.data;
-      $plinkoEngine?.dropBallWithX(data.data.result);
+      // toast.push(data.target_e);
+      // console.log(data);
+      if ($gameNo == 1) $plinkoEngine?.dropBallWithX(data.result);
+      if ($gameNo == 2) {
+        $luckyWheelEngine?.play();
+        $luckyWheelRunning = true;
+        balance.update((balance) => balance - $betAmount);
+        setTimeout(() => {
+          // 结束游戏
+          $luckyWheelEngine!.stop(1);
+        }, 0);
+      }
       // console.log(data.data.result);
     } finally {
       isBetLoading = false;
@@ -77,6 +107,14 @@
     if (autoBetInterval !== null) {
       clearInterval(autoBetInterval);
       autoBetInterval = null;
+    }
+  }
+  function getPlayText() {
+    if ($gameNo == 1) {
+      return 'Drop Ball';
+    }
+    if ($gameNo == 2) {
+      return 'Play';
     }
   }
   async function startDropBall() {
@@ -277,7 +315,7 @@
     )}
   >
     {#if betMode === BetMode.MANUAL}
-      Drop Ball
+      {getPlayText()}
       {#if isBetLoading == true}
         <CircleNotch class="text-white-500 ml-1 inline-block size-5 animate-spin" weight="bold" />
       {/if}

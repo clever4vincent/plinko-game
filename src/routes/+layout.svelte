@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import '../app.css';
-
+  import { SvelteToast } from '@zerodevx/svelte-toast';
   let { children }: { children: Snippet } = $props();
 </script>
 
@@ -14,5 +14,5 @@
     rel="stylesheet"
   />
 </svelte:head>
-
+<SvelteToast />
 {@render children?.()}

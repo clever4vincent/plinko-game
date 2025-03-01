@@ -1,4 +1,5 @@
 import PlinkoEngine from '$lib/components/Plinko/PlinkoEngine';
+import { LuckyWheel, SlotMachine } from 'lucky-canvas-z';
 import { binColor, DEFAULT_BALANCE } from '$lib/constants/game';
 import {
   RiskLevel,
@@ -11,9 +12,11 @@ import { countValueOccurrences } from '$lib/utils/numbers';
 import { derived, writable } from 'svelte/store';
 
 export const plinkoEngine = writable<PlinkoEngine | null>(null);
+export const luckyWheelEngine = writable<LuckyWheel | null>(null);
+export const luckyWheelRunning = writable<boolean>(false);
 
 export const betAmount = writable<number>(100);
-
+export const gameNo = writable<number>(1);
 export const betAmountOfExistingBalls = writable<BetAmountOfExistingBalls>({});
 
 export const rowCount = writable<RowCount>(13);
