@@ -13,6 +13,7 @@ import { derived, writable } from 'svelte/store';
 
 export const plinkoEngine = writable<PlinkoEngine | null>(null);
 export const luckyWheelEngine = writable<LuckyWheel | null>(null);
+export const slotMachineEngine = writable<SlotMachine | null>(null);
 export const luckyWheelRunning = writable<boolean>(false);
 
 export const betAmount = writable<number>(100);

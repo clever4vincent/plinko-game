@@ -46,80 +46,102 @@
     //   myLucky.stop([1, 1, 1, 1]);
     // }, 1000);
     // 大转盘简易 Demo
+    let prizes = [
+      {
+        fonts: [{ text: '500', top: '10%', fontSize: '8px', fontColor: '#fff' }],
+        angle: 12,
+        background: '#0f172b',
+      },
+      {
+        fonts: [{ text: '166', top: '10%', fontColor: '#fff' }],
+        angle: 12,
+        background: '#1e2939',
+      },
+      {
+        fonts: [{ text: '83.3', top: '10%', fontColor: '#fff' }],
+        angle: 14,
+        background: '#0f172b',
+      },
+      {
+        fonts: [{ text: '50', top: '10%', fontColor: '#fff' }],
+        angle: 16,
+        background: '#1e2939',
+      },
+      {
+        fonts: [{ text: '33.3', top: '10%', fontColor: '#fff' }],
+        angle: 19,
+        background: '#0f172b',
+      },
+      {
+        fonts: [{ text: '23.8', top: '10%', fontColor: '#fff' }],
+        angle: 22,
+        background: '#1e2939',
+      },
+      {
+        fonts: [{ text: '17.8', top: '10%', fontColor: '#fff' }],
+        angle: 26,
+        background: '#0f172b',
+      },
+      {
+        fonts: [{ text: '13.8', top: '10%', fontColor: '#fff' }],
+        angle: 29,
+        background: '#1e2939',
+      },
+      {
+        fonts: [{ text: '11.1', top: '10%', fontColor: '#fff' }],
+        angle: 32,
+        background: '#0f172b',
+      },
+      {
+        fonts: [{ text: '9', top: '10%', fontColor: '#fff' }],
+        angle: 34,
+        background: '#1e2939',
+      },
+      {
+        fonts: [{ text: '7.9', top: '10%', fontColor: '#fff' }],
+        angle: 35,
+        background: '#0f172b',
+      },
+      {
+        fonts: [{ text: '7.2', top: '10%', fontColor: '#fff' }],
+        angle: 35,
+        background: '#1e2939',
+      },
+      {
+        fonts: [{ text: '6.8', top: '10%', fontColor: '#fff' }],
+        angle: 36,
+        background: '#0f172b',
+      },
+      {
+        fonts: [{ text: '6.6', top: '10%', fontColor: '#fff' }],
+        angle: 38,
+        background: '#1e2939',
+      },
+    ];
+    prizes.forEach((prize) => {
+      prize.fonts[0].fontSize = '10px';
+      prize.fonts[0].fontWeight = '400';
+    });
     $luckyWheelEngine = new LuckyWheel('#my-lucky', {
       width: '300px',
       height: '300px',
       blocks: [{ padding: '13px', background: '#314158' }],
-      prizes: [
-        {
-          fonts: [{ text: '115x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#0f172b',
-        },
-        {
-          fonts: [{ text: '41x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#1e2939',
-        },
-        {
-          fonts: [{ text: '15x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#0f172b',
-        },
-        {
-          fonts: [{ text: '10x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#1e2939',
-        },
-        {
-          fonts: [{ text: '7.5x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#0f172b',
-        },
-        {
-          fonts: [{ text: '3.5x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#1e2939',
-        },
-        {
-          fonts: [{ text: '2x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#0f172b',
-        },
-        {
-          fonts: [{ text: '1.5x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#1e2939',
-        },
-        {
-          fonts: [{ text: '0.4x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#0f172b',
-        },
-        {
-          fonts: [{ text: '0.2x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#1e2939',
-        },
-        {
-          fonts: [{ text: '0x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#0f172b',
-        },
-        {
-          fonts: [{ text: '0x', top: '10%', fontColor: '#fff' }],
-          angle: 30,
-          background: '#1e2939',
-        },
-      ],
+      prizes,
       buttons: [
         {
-          radius: '20%',
+          radius: '15%',
           background: '#314158',
           pointer: true,
           fonts: [{ text: '', top: '-10px', fontSize: '16px' }],
         },
       ],
+      defaultConfig: {
+        autoAngle: false,
+        canSelect: true,
+        gutter: 0,
+        stopRange: 0,
+        offsetDegree: 0.3,
+      },
       end: function (prize: any) {
         $luckyWheelRunning = false;
         winRecords.update((records) => [
@@ -129,7 +151,7 @@
             id: '',
             betAmount: 0,
             rowCount: 10,
-            binIndex: 0,
+            binIndex: 1,
             payout: {
               multiplier: 0,
               value: 0,
@@ -184,7 +206,7 @@
 
         <!-- 修改后的核心区域 -->
         <div class=" m-auto mb-4 flex-1 lg:flex lg:items-center lg:justify-center">
-          <div id="my-lucky" class="relative" style="width: 300px; height: 300px;">
+          <div id="my-lucky" class="relative" style="width: 335px; height: 335px;">
             {#if $luckyWheelEngine === null}
               <div class="absolute inset-0 flex items-center justify-center">
                 <CircleNotch class="size-20 animate-spin text-slate-400" weight="bold" />

@@ -10,6 +10,7 @@
     plinkoEngine,
     luckyWheelRunning,
     luckyWheelEngine,
+    slotMachineEngine,
     riskLevel,
     rowCount,
   } from '$lib/stores/game';
@@ -64,7 +65,7 @@
       );
     } else if ($gameNo === 2) {
       return (
-        $luckyWheelRunning ||
+        (!autoBetInterval && $luckyWheelRunning) ||
         isBetAmountNegative ||
         isBetExceedBalance ||
         isAutoBetInputNegative ||
@@ -72,6 +73,7 @@
       );
     }
   }
+
   const handleBetAmountFocusOut: FormEventHandler<HTMLInputElement> = (e) => {
     const parsedValue = parseFloat(e.currentTarget.value.trim());
     if (isNaN(parsedValue)) {
@@ -95,7 +97,14 @@
         balance.update((balance) => balance - $betAmount);
         setTimeout(() => {
           // 结束游戏
-          $luckyWheelEngine!.stop(1);
+          $luckyWheelEngine!.stop(4);
+        }, 0);
+      }
+      if ($gameNo == 3) {
+        $slotMachineEngine!.play();
+        setTimeout(() => {
+          // 结束游戏
+          $slotMachineEngine!.stop([1, 1, 1]);
         }, 0);
       }
       // console.log(data.data.result);
@@ -113,7 +122,7 @@
     if ($gameNo == 1) {
       return 'Drop Ball';
     }
-    if ($gameNo == 2) {
+    if ($gameNo == 2 || $gameNo == 3) {
       return 'Play';
     }
   }
@@ -121,7 +130,10 @@
     fetchData();
   }
   function autoBetDropBall() {
-    if (isBetLoading) {
+    if (isBetLoading && $gameNo == 1) {
+      return;
+    }
+    if ($luckyWheelRunning && $gameNo == 2) {
       return;
     }
     if (isBetExceedBalance) {
@@ -168,11 +180,16 @@
       resetAutoBetInterval();
     }
   }
-
-  const betModes = [
+  let betModes = $state([
     { value: BetMode.MANUAL, label: 'Manual' },
     { value: BetMode.AUTO, label: 'Auto' },
-  ];
+  ]);
+  $effect(() => {
+    if ($gameNo == 2 || $gameNo == 3) {
+      betModes = [{ value: BetMode.MANUAL, label: 'Manual' }];
+    }
+  });
+
   const riskLevels = [
     { value: RiskLevel.LOW, label: 'Low' },
     { value: RiskLevel.MEDIUM, label: 'Medium' },
