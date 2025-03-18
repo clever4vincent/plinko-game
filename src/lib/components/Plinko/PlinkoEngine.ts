@@ -15,6 +15,7 @@ import Matter, { type IBodyDefinition } from 'matter-js';
 import { get } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
 import oIcon from '$lib/assets/ooo.png';
+import ballIcon from '$lib/assets/ball.png';
 type BallFrictionsByRowCount = {
   friction: NonNullable<IBodyDefinition['friction']>;
   frictionAirByRowCount: Record<RowCount, NonNullable<IBodyDefinition['frictionAir']>>;
@@ -131,7 +132,7 @@ class PlinkoEngine {
       options: {
         width: PlinkoEngine.WIDTH,
         height: PlinkoEngine.HEIGHT,
-        background: '#0f1728',
+        background: 'transparent', // 关键参数
         wireframes: false,
       },
     });
@@ -223,7 +224,12 @@ class PlinkoEngine {
         mask: PlinkoEngine.PIN_CATEGORY, // Collide with pins only, but not other balls
       },
       render: {
-        fillStyle: '#ff0000',
+        // fillStyle: '#ff0000',
+        sprite: {
+          texture: ballIcon,
+          xScale: 1,
+          yScale: 1,
+        },
       },
     });
     Matter.Composite.add(this.engine.world, ball);
@@ -348,12 +354,12 @@ class PlinkoEngine {
         const pin = Matter.Bodies.circle(colX, rowY, this.pinRadius, {
           isStatic: true,
           render: {
-            fillStyle: '#ffffff',
-            // sprite: {
-            //   texture: oIcon,
-            //   xScale: 0.1,
-            //   yScale: 0.1,
-            // },
+            // fillStyle: '#ffffff',
+            sprite: {
+              texture: oIcon,
+              xScale: 1,
+              yScale: 1,
+            },
           },
           collisionFilter: {
             category: PIN_CATEGORY,

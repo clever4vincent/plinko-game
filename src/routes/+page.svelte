@@ -79,7 +79,7 @@
 <svelte:window onbeforeunload={writeBalanceToLocalStorage} />
 
 <div class="relative flex min-h-dvh w-full flex-col">
-  <nav class="sticky top-0 z-10 w-full bg-gray-700 px-5 drop-shadow-lg">
+  <nav class="sticky top-0 z-10 w-full px-5 drop-shadow-lg">
     <div class="mx-auto flex h-14 max-w-7xl items-center justify-between">
       <!-- <img src={logo} alt="logo" class="h-6 sm:h-7" /> -->
       <div class="mx-auto">
@@ -107,6 +107,12 @@
   @reference "../app.css";
 
   :global(body) {
-    @apply bg-gray-800;
+    /* @apply bg-gray-800; */
+    /* background-image: ; */
+    background-image: url('$lib/assets/bg_all.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
   }
 </style>

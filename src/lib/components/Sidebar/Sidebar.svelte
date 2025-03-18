@@ -198,15 +198,15 @@
   const rowCounts = rowCountOptions.map((value) => ({ value, label: value.toString() }));
 </script>
 
-<div class="flex flex-col gap-5 bg-slate-700 p-3 lg:max-w-80">
-  <div class="flex gap-1 rounded-full bg-slate-900 p-1">
+<div class="flex flex-col gap-5 p-3 lg:max-w-80">
+  <div class="flex gap-1 rounded-full bg-[#7e420b] p-1">
     {#each betModes as { value, label }}
       <button
         disabled={autoBetInterval !== null}
         onclick={() => (betMode = value)}
         class={twMerge(
-          'flex-1 rounded-full py-2 text-sm font-medium text-white transition hover:not-disabled:bg-slate-600 active:not-disabled:bg-slate-500 disabled:cursor-not-allowed disabled:opacity-50',
-          betMode === value && 'bg-slate-600',
+          'h-[44px] flex-1 rounded-full py-2 text-sm text-[16px] text-white  transition  hover:not-disabled:bg-[#f6cd27]  active:not-disabled:bg-[#f6cd27] disabled:cursor-not-allowed disabled:opacity-50',
+          betMode === value && 'textshadow bg-[#f6cd27] font-bold text-[#983b01]',
         )}
       >
         {label}
@@ -215,7 +215,7 @@
   </div>
 
   <div class="relative">
-    <label for="betAmount" class="text-sm font-medium text-slate-300">Bet Amount</label>
+    <label for="betAmount" class="text-sm font-medium text-white">Bet Amount</label>
     <div class="flex">
       <div class="relative flex-1">
         <input
@@ -228,19 +228,19 @@
           step="10"
           inputmode="decimal"
           class={twMerge(
-            'w-full rounded-l-md border-2 border-slate-600 bg-slate-900 py-2 pr-2 pl-7 text-sm text-white transition-colors hover:cursor-pointer hover:not-disabled:border-slate-500 focus:border-slate-500 focus:outline-hidden  disabled:cursor-not-allowed disabled:opacity-50',
+            'h-[50px] w-full rounded-l-md bg-[#783900] py-2 pr-2 pl-7 text-sm text-white transition-colors hover:cursor-pointer hover:not-disabled:border-slate-500 focus:border-slate-500 focus:outline-hidden  disabled:cursor-not-allowed disabled:opacity-50',
             (isBetAmountNegative || isBetExceedBalance) &&
               'border-red-500 hover:not-disabled:border-red-400 focus:border-red-400',
           )}
         />
-        <div class="absolute top-2 left-3 text-slate-500 select-none" aria-hidden="true">$</div>
+        <div class="absolute top-3.5 left-3 text-[#AF6B17] select-none" aria-hidden="true">$</div>
       </div>
       <button
         disabled={autoBetInterval !== null}
         onclick={() => {
           $betAmount = parseFloat(($betAmount / 2).toFixed(2));
         }}
-        class="touch-manipulation bg-slate-600 px-4 font-bold text-white diagonal-fractions transition-colors hover:not-disabled:bg-slate-500 active:not-disabled:bg-slate-400 disabled:cursor-not-allowed disabled:opacity-50"
+        class="touch-manipulation bg-[#f8d134] px-4 font-bold text-[#983b01] diagonal-fractions transition-colors hover:not-disabled:bg-[#f8f534] active:not-disabled:bg-[#e1e288] disabled:cursor-not-allowed disabled:opacity-50"
       >
         1/2
       </button>
@@ -249,17 +249,17 @@
         onclick={() => {
           $betAmount = parseFloat(($betAmount * 2).toFixed(2));
         }}
-        class="relative touch-manipulation rounded-r-md bg-slate-600 px-4 text-sm font-bold text-white transition-colors after:absolute after:left-0 after:inline-block after:h-1/2 after:w-[2px] after:bg-slate-800 after:content-[''] hover:not-disabled:bg-slate-500 active:not-disabled:bg-slate-400 disabled:cursor-not-allowed disabled:opacity-50"
+        class="relative touch-manipulation rounded-r-md bg-[#f8d134] px-4 text-sm font-bold text-[#983b01] transition-colors after:absolute after:left-0 after:inline-block after:h-1/2 after:w-[2px] after:bg-[#A04C09] after:content-[''] hover:not-disabled:bg-[#f8f534] active:not-disabled:bg-[#e1e288] disabled:cursor-not-allowed disabled:opacity-50"
       >
         2×
       </button>
     </div>
     {#if isBetAmountNegative}
-      <p class="absolute text-xs leading-5 text-red-400">
+      <p class="absolute text-xs leading-5 text-red-600">
         This must be greater than or equal to 0.
       </p>
     {:else if isBetExceedBalance}
-      <p class="absolute text-xs leading-5 text-red-400">Can't bet more than your balance!</p>
+      <p class="absolute text-xs leading-5 text-red-600">Can't bet more than your balance!</p>
     {/if}
   </div>
 
@@ -286,10 +286,10 @@
   {#if betMode === BetMode.AUTO}
     <div>
       <div class="flex items-center gap-1">
-        <label for="autoBetInput" class="text-sm font-medium text-slate-300">Number of Bets</label>
+        <label for="autoBetInput" class="text-sm font-medium text-white">Number of Bets</label>
         <Popover.Root>
           <Popover.Trigger class="p-1">
-            <Question class="text-slate-300" weight="bold" />
+            <Question class="text-white" weight="bold" />
           </Popover.Trigger>
           <Popover.Content
             class="z-30 max-w-lg rounded-md bg-white p-3 text-sm font-medium text-gray-950 drop-shadow-xl"
@@ -309,12 +309,12 @@
           min="0"
           inputmode="numeric"
           class={twMerge(
-            'w-full rounded-md border-2 border-slate-600 bg-slate-900 py-2 pr-8 pl-3 text-sm text-white transition-colors hover:cursor-pointer hover:not-disabled:border-slate-500 focus:border-slate-500 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
+            'h-[50px] w-full rounded-md  bg-[#783900]  py-2 pr-8 pl-3 text-sm text-white transition-colors hover:cursor-pointer hover:not-disabled:border-slate-500 focus:border-slate-500 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
             isAutoBetInputNegative && 'border-red-500 hover:border-red-400 focus:border-red-400',
           )}
         />
         {#if autoBetInput === 0}
-          <Infinity class="absolute top-3 right-3 size-4 text-slate-400" weight="bold" />
+          <Infinity class="absolute top-4 right-3 size-4 text-[#AF6B17] " weight="bold" />
         {/if}
       </div>
       {#if isAutoBetInputNegative}
@@ -344,7 +344,7 @@
   </button>
 
   <div class="mt-auto pt-5">
-    <div class="flex items-center gap-4 border-t border-slate-600 pt-3">
+    <div class="border-tpt-3 flex items-center gap-4">
       <Tooltip.Provider delayDuration={0} disableCloseOnTriggerClick>
         <!-- Settings Button -->
         <!-- <Tooltip.Root>
@@ -407,3 +407,13 @@
     </div>
   </div>
 </div>
+
+<style>
+  .textshadow {
+    /* font-size: 18px; */
+    /* box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.5); */
+    text-shadow:
+      1px 1px 0 #552200,
+      -0.5px -0.5px 1px #fff; /* 深色+亮色对比，模拟内阴影 */
+  }
+</style>

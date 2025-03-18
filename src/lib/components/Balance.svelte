@@ -13,21 +13,21 @@
   const addMoneyAmounts = [100, 500, 1000];
 </script>
 
-<div class="flex overflow-hidden rounded-md">
+<div class="flex overflow-hidden rounded-4xl">
   <div
-    class="flex gap-2 bg-slate-900 px-3 py-2 text-sm font-semibold text-white tabular-nums sm:text-base"
+    class="text-[18px]font-semibold flex bg-[#7e420b] px-10 py-2 text-[#ffd040] tabular-nums sm:text-base"
   >
-    <span class="text-gray-500 select-none">$</span>
-    <span class="min-w-16 text-right">
+    <span class="mr-1 text-[#a25b19] select-none">$</span>
+    <span class="min-w-16 text-right font-bold">
       {balanceFormatted}
     </span>
   </div>
-  <Popover.Root>
-    <Popover.Trigger
+  <!-- <Popover.Root >
+   <Popover.Trigger
       class="bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500 active:bg-blue-700 sm:text-base"
     >
       Add
-    </Popover.Trigger>
+    </Popover.Trigger> 
     <Popover.Content
       forceMount
       sideOffset={8}
@@ -53,5 +53,6 @@
         {/if}
       {/snippet}
     </Popover.Content>
-  </Popover.Root>
+  </Popover.Root> -->
 </div>
+<div></div>
