@@ -15,6 +15,7 @@
     rowCount,
   } from '$lib/stores/game';
   import { isGameSettingsOpen, isLiveStatsOpen } from '$lib/stores/layout';
+  import betGif from '$lib/assets/bet.gif';
   import { BetMode, RiskLevel } from '$lib/types';
   import { flyAndScale } from '$lib/utils/transitions';
   import { Popover, Tooltip } from 'bits-ui';
@@ -240,7 +241,7 @@
         onclick={() => {
           $betAmount = parseFloat(($betAmount / 2).toFixed(2));
         }}
-        class="touch-manipulation bg-[#f8d134] px-4 font-bold text-[#983b01] diagonal-fractions transition-colors hover:not-disabled:bg-[#f8f534] active:not-disabled:bg-[#e1e288] disabled:cursor-not-allowed disabled:opacity-50"
+        class="textshadow touch-manipulation bg-[#f8d134] px-4 font-bold text-[#983b01] diagonal-fractions transition-colors hover:not-disabled:bg-[#f8f534] active:not-disabled:bg-[#e1e288] disabled:cursor-not-allowed disabled:opacity-50"
       >
         1/2
       </button>
@@ -249,7 +250,7 @@
         onclick={() => {
           $betAmount = parseFloat(($betAmount * 2).toFixed(2));
         }}
-        class="relative touch-manipulation rounded-r-md bg-[#f8d134] px-4 text-sm font-bold text-[#983b01] transition-colors after:absolute after:left-0 after:inline-block after:h-1/2 after:w-[2px] after:bg-[#A04C09] after:content-[''] hover:not-disabled:bg-[#f8f534] active:not-disabled:bg-[#e1e288] disabled:cursor-not-allowed disabled:opacity-50"
+        class=" textshadow relative touch-manipulation rounded-r-md bg-[#f8d134] px-4 text-sm font-bold text-[#983b01] transition-colors after:absolute after:left-0 after:inline-block after:h-1/2 after:w-[2px] after:bg-[#A04C09] after:content-[''] hover:not-disabled:bg-[#f8f534] active:not-disabled:bg-[#e1e288] disabled:cursor-not-allowed disabled:opacity-50"
       >
         2×
       </button>
@@ -327,27 +328,36 @@
     onclick={handleBetClick}
     disabled={isDropBallDisabled}
     class={twMerge(
-      'flex touch-manipulation items-center justify-center rounded-md bg-green-500 py-3 font-semibold text-slate-900 transition-colors hover:bg-green-400 active:bg-green-600 disabled:bg-neutral-600 disabled:text-neutral-400',
-      autoBetInterval !== null && 'bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-600',
+      'btn-bet  flex touch-manipulation items-center  justify-center rounded-4xl py-3 font-semibold text-white transition-colors  disabled:text-white',
+      autoBetInterval !== null && '  bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-600',
     )}
   >
     {#if betMode === BetMode.MANUAL}
       {getPlayText()}
       {#if isBetLoading == true}
-        <CircleNotch class="text-white-500 ml-1 inline-block size-5 animate-spin" weight="bold" />
+        <!-- <CircleNotch class="text-white-500 ml-1 inline-block size-5 animate-spin" weight="bold" /> -->
+        <img src={betGif} alt="loading" class="size-6" />
       {/if}
     {:else if autoBetInterval === null}
       Start Autobet
+      {#if isBetLoading == true}
+        <!-- <CircleNotch class="text-white-500 ml-1 inline-block size-5 animate-spin" weight="bold" /> -->
+        <img src={betGif} alt="loading" class="size-6" />
+      {/if}
     {:else}
       Stop Autobet
+      {#if isBetLoading == true}
+        <!-- <CircleNotch class="text-white-500 ml-1 inline-block size-5 animate-spin" weight="bold" /> -->
+        <img src={betGif} alt="loading" class="size-6" />
+      {/if}
     {/if}
   </button>
-
-  <div class="mt-auto pt-5">
-    <div class="border-tpt-3 flex items-center gap-4">
-      <Tooltip.Provider delayDuration={0} disableCloseOnTriggerClick>
-        <!-- Settings Button -->
-        <!-- <Tooltip.Root>
+  {#if false}
+    <div class="mt-auto pt-5">
+      <div class="border-tpt-3 flex items-center gap-4">
+        <Tooltip.Provider delayDuration={0} disableCloseOnTriggerClick>
+          <!-- Settings Button -->
+          <!-- <Tooltip.Root>
           <Tooltip.Trigger
             onclick={() => ($isGameSettingsOpen = !$isGameSettingsOpen)}
             class={twMerge(
@@ -375,45 +385,55 @@
           </Tooltip.Content>
         </Tooltip.Root> -->
 
-        <!-- Live Stats Button -->
-        <Tooltip.Root>
-          <Tooltip.Trigger
-            onclick={() => ($isLiveStatsOpen = !$isLiveStatsOpen)}
-            class={twMerge(
-              'rounded-full p-2 text-slate-300 transition hover:bg-slate-600 active:bg-slate-500',
-              $isLiveStatsOpen && 'text-slate-100',
-            )}
-          >
-            <ChartLine class="size-6" weight="bold" />
-          </Tooltip.Trigger>
-          <Tooltip.Content
-            forceMount
-            sideOffset={4}
-            class="z-30 max-w-lg rounded-md bg-white p-3 text-sm font-medium text-gray-950 drop-shadow-xl"
-          >
-            {#snippet child({ wrapperProps, props, open })}
-              {#if open}
-                <div {...wrapperProps}>
-                  <div {...props} transition:flyAndScale>
-                    <Tooltip.Arrow class="text-white" />
-                    <p>{$isLiveStatsOpen ? 'Close' : 'Open'} Live Stats</p>
+          <!-- Live Stats Button -->
+          <Tooltip.Root>
+            <Tooltip.Trigger
+              onclick={() => ($isLiveStatsOpen = !$isLiveStatsOpen)}
+              class={twMerge(
+                'rounded-full p-2 text-slate-300 transition hover:bg-slate-600 active:bg-slate-500',
+                $isLiveStatsOpen && 'text-slate-100',
+              )}
+            >
+              <ChartLine class="size-6" weight="bold" />
+            </Tooltip.Trigger>
+            <Tooltip.Content
+              forceMount
+              sideOffset={4}
+              class="z-30 max-w-lg rounded-md bg-white p-3 text-sm font-medium text-gray-950 drop-shadow-xl"
+            >
+              {#snippet child({ wrapperProps, props, open })}
+                {#if open}
+                  <div {...wrapperProps}>
+                    <div {...props} transition:flyAndScale>
+                      <Tooltip.Arrow class="text-white" />
+                      <p>{$isLiveStatsOpen ? 'Close' : 'Open'} Live Stats</p>
+                    </div>
                   </div>
-                </div>
-              {/if}
-            {/snippet}
-          </Tooltip.Content>
-        </Tooltip.Root>
-      </Tooltip.Provider>
+                {/if}
+              {/snippet}
+            </Tooltip.Content>
+          </Tooltip.Root>
+        </Tooltip.Provider>
+      </div>
     </div>
-  </div>
+  {/if}
 </div>
 
 <style>
   .textshadow {
     /* font-size: 18px; */
     /* box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.5); */
-    text-shadow:
-      1px 1px 0 #552200,
-      -0.5px -0.5px 1px #fff; /* 深色+亮色对比，模拟内阴影 */
+
+    /* text-shadow: 1px 1px 0 #552200; */
+  }
+  .btn-bet {
+    height: 54px;
+    padding-bottom: 18px;
+    background-image: url('$lib/assets/btn_bet.png');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    /* &:disabled {
+      background-image: none;
+    } */
   }
 </style>

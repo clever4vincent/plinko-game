@@ -1,6 +1,7 @@
 <script lang="ts">
   import { draggable } from '@neodrag/svelte';
   import Close from 'phosphor-svelte/lib/X';
+  import closeIcon from '$lib/assets/close.png';
   import type { Snippet } from 'svelte';
   import type { HTMLAttributes } from 'svelte/elements';
   import { scale } from 'svelte/transition';
@@ -35,16 +36,16 @@
 </script>
 
 <div
-  in:scale={{ duration: 200 }}
+  in:scale={{ duration: 100 }}
   use:draggable={{ bounds: 'body', handle: dragHandleElement }}
-  class={twMerge('z-40 w-[15rem] rounded-md bg-slate-600 drop-shadow-lg', className)}
+  class={twMerge('z-40 w-[15rem]  bg-[#f0af6e] drop-shadow-lg', className)}
   {...props}
 >
   <!-- Title bar -->
   <div class="flex">
     <div
       bind:this={dragHandleElement}
-      class="flex flex-1 cursor-move items-center gap-2 bg-slate-800 px-4 py-2"
+      class="flex flex-1 cursor-move items-center gap-2 bg-[#f0af6e] px-4 py-2"
     >
       {@render title?.()}
     </div>
@@ -52,15 +53,15 @@
       {@render titleBarActions?.()}
       <button
         onclick={onClose}
-        class="bg-slate-800 px-5 py-3 text-slate-300 transition hover:bg-red-600 hover:text-white active:bg-red-700 active:text-white"
+        class="bg-[#f0af6e] px-4 py-3 text-slate-300 transition hover:bg-red-600 hover:text-white active:bg-red-700 active:text-white"
       >
-        <Close weight="bold" />
+        <img src={closeIcon} alt="close" class="size-6" />
       </button>
     </div>
   </div>
 
   <!-- Content -->
-  <div class="p-4">
+  <div class=" p-4">
     {@render children?.()}
   </div>
 </div>

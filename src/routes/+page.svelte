@@ -2,13 +2,18 @@
   import logo from '$lib/assets/logo.svg';
   import Balance from '$lib/components/Balance.svelte';
   import LiveStatsWindow from '$lib/components/LiveStatsWindow/LiveStatsWindow.svelte';
+  import HistoryWindow from '$lib/components/HistoryWindow/HistoryWindow.svelte';
   import Plinko from '$lib/components/Plinko';
   import SettingsWindow from '$lib/components/SettingsWindow';
   import Sidebar from '$lib/components/Sidebar';
   import { setBalanceFromLocalStorage, writeBalanceToLocalStorage } from '$lib/utils/game';
   import GitHubLogo from 'phosphor-svelte/lib/GithubLogo';
   import { page } from '$app/stores';
-
+  import request from '$lib/utils/request';
+  async function fetchData() {
+    const response = await request.get('games/plinko/bet', { token: '' });
+    let data = response.data;
+  }
   // 监听 URL 参数
   // $: gameId = $page.params.id; // 例如 /game/123 -> gameId = "123"
   // console.log(gameId);
@@ -72,11 +77,11 @@
     //     }, 3000);
     //   },
     // });
-    setBalanceFromLocalStorage();
+    // setBalanceFromLocalStorage();
   });
 </script>
 
-<svelte:window onbeforeunload={writeBalanceToLocalStorage} />
+<!-- <svelte:window onbeforeunload={writeBalanceToLocalStorage} /> -->
 
 <div class="relative flex min-h-dvh w-full flex-col">
   <nav class="sticky top-0 z-10 w-full px-5 drop-shadow-lg">
@@ -98,9 +103,10 @@
       </div>
     </div>
   </div>
-  <div id="my-lucky"></div>
+  <!-- <div id="my-lucky"></div> -->
   <!-- <SettingsWindow /> -->
   <LiveStatsWindow />
+  <HistoryWindow />
 </div>
 
 <style lang="postcss">

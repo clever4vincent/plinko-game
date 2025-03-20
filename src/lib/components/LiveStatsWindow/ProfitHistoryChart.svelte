@@ -12,7 +12,7 @@
   const WIN_COLOR_FILL = 'rgba(74, 222, 128, 0.3)';
   const LOSS_COLOR = 'rgb(248, 113, 113)'; // red-400
   const LOSS_COLOR_FILL = 'rgba(248, 113, 113, 0.3)'; // red-400
-  const X_AXIS_COLOR = '#1e293b'; // slate-800
+  const X_AXIS_COLOR = '#A54E17'; // slate-800
   const POINT_HOVER_COLOR = '#fff';
 
   const initChart: Action<HTMLCanvasElement, { profitHistory: number[] }> = (
@@ -104,12 +104,13 @@
   };
 </script>
 
-<div class="relative rounded-md bg-slate-900 p-4 text-sm">
-  <p class="font-medium text-slate-400">Profit History</p>
+<div class="relative rounded-md bg-[#ef9d49] p-4 text-sm">
+  <p class="font-medium text-[#822800]">Profit History</p>
   <p
     class={twMerge(
       'absolute font-semibold tabular-nums',
-      hoveredProfitValue !== null && (hoveredProfitValue >= 0 ? 'text-green-400' : 'text-red-400'),
+      hoveredProfitValue !== null &&
+        (hoveredProfitValue >= 0 ? 'text-[#008A46]' : 'text-[#CB0000]'),
     )}
   >
     {hoveredProfitValue !== null ? formatCurrency(hoveredProfitValue) : ''}
