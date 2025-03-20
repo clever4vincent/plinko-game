@@ -328,8 +328,8 @@
     onclick={handleBetClick}
     disabled={isDropBallDisabled}
     class={twMerge(
-      'btn-bet  flex touch-manipulation items-center  justify-center rounded-4xl py-3 font-semibold text-white transition-colors  disabled:text-white',
-      autoBetInterval !== null && '  bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-600',
+      'btn-bet  mx-auto flex max-w-[25rem] min-w-[20rem] touch-manipulation items-center justify-center rounded-4xl py-3 font-semibold text-white transition-colors  ',
+      autoBetInterval !== null && '  ',
     )}
   >
     {#if betMode === BetMode.MANUAL}

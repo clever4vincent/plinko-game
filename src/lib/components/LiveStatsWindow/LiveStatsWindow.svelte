@@ -20,7 +20,7 @@
   <div>
     <DraggableWindow
       onClose={() => ($isLiveStatsOpen = false)}
-      class="fixed right-0 bottom-0 left-0 mx-auto w-[100%]  overflow-hidden rounded-t-3xl "
+      class="fixed right-0 bottom-0 left-0 mx-auto w-[100%]  max-w-[50rem] overflow-hidden  rounded-t-3xl"
     >
       {#snippet title()}
         <!-- <ChartLine weight="bold" class=" text-xl text-slate-300" /> -->

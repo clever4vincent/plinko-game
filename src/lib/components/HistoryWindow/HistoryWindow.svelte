@@ -73,7 +73,7 @@
   <div>
     <DraggableWindow
       onClose={() => ($isHistoryOpen = false)}
-      class="fixed right-0 bottom-0 left-0 mx-auto min-h-[10rem] w-[100%] overflow-hidden rounded-t-3xl"
+      class="fixed right-0 bottom-0 left-0 mx-auto min-h-[10rem] w-[100%] max-w-[50rem] overflow-hidden rounded-t-3xl"
     >
       <div
         bind:this={historyList}

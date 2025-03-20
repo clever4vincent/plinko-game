@@ -115,7 +115,7 @@
   >
     {hoveredProfitValue !== null ? formatCurrency(hoveredProfitValue) : ''}
   </p>
-  <div class="mt-6 h-[11rem] w-[16rem]">
+  <div class="mt-6 h-[11rem] w-[100%]">
     <canvas
       use:initChart={{ profitHistory: $totalProfitHistory }}
       onmouseleave={() => (hoveredProfitValue = null)}
