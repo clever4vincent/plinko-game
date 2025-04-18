@@ -19,7 +19,7 @@
 
 <div class="flex overflow-hidden">
   <div
-    class="flex rounded-4xl bg-[#7e420b] px-10 py-2 text-[18px] font-semibold text-[#ffd040] tabular-nums sm:text-base"
+    class="flex rounded-4xl bg-[#7e420b] px-5 py-2 text-[16px] font-semibold text-[#ffd040] tabular-nums sm:text-base"
   >
     <span class="mr-1 text-[#a25b19] select-none">$</span>
     <span class="min-w-16 text-right font-bold">

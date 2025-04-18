@@ -11,6 +11,7 @@
     luckyWheelRunning,
     luckyWheelEngine,
     slotMachineEngine,
+    token,
     riskLevel,
     rowCount,
   } from '$lib/stores/game';
@@ -75,6 +76,25 @@
     }
   }
 
+  const handleBetAmountInput: FormEventHandler<HTMLInputElement> = (e) => {
+    const input = e.currentTarget;
+    const value = input.value;
+
+    // 如果输入包含小数点，限制小数位数
+    if (value.includes('.')) {
+      const parts = value.split('.');
+      if (parts[1].length > 2) {
+        input.value = parts[0] + '.' + parts[1].slice(0, 2);
+      }
+    }
+
+    // 更新 betAmount
+    const parsedValue = parseFloat(input.value);
+    if (!isNaN(parsedValue)) {
+      $betAmount = parsedValue;
+    }
+  };
+
   const handleBetAmountFocusOut: FormEventHandler<HTMLInputElement> = (e) => {
     const parsedValue = parseFloat(e.currentTarget.value.trim());
     if (isNaN(parsedValue)) {
@@ -87,27 +107,32 @@
   async function fetchData() {
     isBetLoading = true;
     try {
-      const response = await request.get('games/plinko/bet', { bet: $betAmount, user: '123456' });
+      const response = await request.post('game/bet', {
+        gameId: $gameNo,
+        betAmount: $betAmount,
+        token: $token,
+        gameLevel: 0,
+      });
       let data = response.data;
       // toast.push(data.target_e);
-      // console.log(data);
-      if ($gameNo == 1) $plinkoEngine?.dropBallWithX(data.result);
-      if ($gameNo == 2) {
-        $luckyWheelEngine?.play();
-        $luckyWheelRunning = true;
-        balance.update((balance) => balance - $betAmount);
-        setTimeout(() => {
-          // 结束游戏
-          $luckyWheelEngine!.stop(4);
-        }, 0);
-      }
-      if ($gameNo == 3) {
-        $slotMachineEngine!.play();
-        setTimeout(() => {
-          // 结束游戏
-          $slotMachineEngine!.stop([1, 1, 1]);
-        }, 0);
-      }
+
+      $plinkoEngine?.dropBallWithX(parseFloat(data.result));
+      // if ($gameNo == 2) {
+      //   $luckyWheelEngine?.play();
+      //   $luckyWheelRunning = true;
+      //   balance.update((balance) => balance - $betAmount);
+      //   setTimeout(() => {
+      //     // 结束游戏
+      //     $luckyWheelEngine!.stop(4);
+      //   }, 0);
+      // }
+      // if ($gameNo == 3) {
+      //   $slotMachineEngine!.play();
+      //   setTimeout(() => {
+      //     // 结束游戏
+      //     $slotMachineEngine!.stop([1, 1, 1]);
+      //   }, 0);
+      // }
       // console.log(data.data.result);
     } finally {
       isBetLoading = false;
@@ -168,6 +193,7 @@
       autoBetInput = parsedValue;
     }
   };
+
   function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
@@ -222,12 +248,13 @@
         <input
           id="betAmount"
           value={$betAmount}
+          oninput={handleBetAmountInput}
           onfocusout={handleBetAmountFocusOut}
           disabled={autoBetInterval !== null}
           type="number"
           min="0"
-          step="10"
           inputmode="decimal"
+          step="10"
           class={twMerge(
             'h-[50px] w-full rounded-l-md bg-[#783900] py-2 pr-2 pl-7 text-sm text-white transition-colors hover:cursor-pointer hover:not-disabled:border-slate-500 focus:border-slate-500 focus:outline-hidden  disabled:cursor-not-allowed disabled:opacity-50',
             (isBetAmountNegative || isBetExceedBalance) &&
@@ -308,7 +335,7 @@
           onfocusout={handleAutoBetInputFocusOut}
           type="number"
           min="0"
-          inputmode="numeric"
+          inputmode="decimal"
           class={twMerge(
             'h-[50px] w-full rounded-md  bg-[#783900]  py-2 pr-8 pl-3 text-sm text-white transition-colors hover:cursor-pointer hover:not-disabled:border-slate-500 focus:border-slate-500 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
             isAutoBetInputNegative && 'border-red-500 hover:border-red-400 focus:border-red-400',
@@ -328,7 +355,8 @@
     onclick={handleBetClick}
     disabled={isDropBallDisabled}
     class={twMerge(
-      'btn-bet  mx-auto flex max-w-[25rem] min-w-[20rem] touch-manipulation items-center justify-center rounded-4xl py-3 font-semibold text-white transition-colors  ',
+      'btn-bet mx-auto flex max-w-[25rem] min-w-[18rem] touch-manipulation items-center justify-center rounded-4xl py-3 font-semibold text-white transition-colors',
+      isDropBallDisabled ? 'cursor-not-allowed bg-gray-400 opacity-50' : '',
       autoBetInterval !== null && '  ',
     )}
   >
@@ -428,10 +456,10 @@
   }
   .btn-bet {
     height: 54px;
-    padding-bottom: 18px;
+    padding-bottom: 16px;
     background-image: url('$lib/assets/btn_bet.png');
     background-repeat: no-repeat;
-    background-size: 100% auto;
+    background-size: 100% 54px;
     /* &:disabled {
       background-image: none;
     } */

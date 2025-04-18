@@ -18,6 +18,7 @@ export const luckyWheelRunning = writable<boolean>(false);
 
 export const betAmount = writable<number>(100);
 export const gameNo = writable<number>(1);
+export const token = writable<string>('');
 export const betAmountOfExistingBalls = writable<BetAmountOfExistingBalls>({});
 
 export const rowCount = writable<RowCount>(13);

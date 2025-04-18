@@ -59,7 +59,9 @@ export type WinRecord = {
 };
 export type HistoryRecord = {
   gameId: string;
-  balance: number;
-  time: string;
-  profit: number;
+  currentGameBalance: number;
+  betBalance: number;
+  date: string;
+  rewardBalance: number;
+  rewardRate: number;
 };

@@ -10,15 +10,24 @@
   import GitHubLogo from 'phosphor-svelte/lib/GithubLogo';
   import { page } from '$app/stores';
   import request from '$lib/utils/request';
-  async function fetchData() {
-    const response = await request.get('games/plinko/bet', { token: '' });
-    let data = response.data;
+  import { balance, token } from '$lib/stores/game';
+  async function getBalance() {
+    if (!$token) return;
+    request.post('/game/get/balance', { token: $token }).then((response) => {
+      let data = response.data;
+      balance.set(data?.gameBalance || 0);
+    });
+    // let data = response.data;
+    // console.log(response);
   }
   // 监听 URL 参数
   // $: gameId = $page.params.id; // 例如 /game/123 -> gameId = "123"
   // console.log(gameId);
   $effect(() => {
-    let token = $page.url.searchParams.get('token');
+    let tokenParam = $page.url.searchParams.get('token');
+    // 112ff679c1a0d4f15857a51918568c8d9
+    tokenParam && ($token = tokenParam);
+    getBalance();
     // 老虎机 Demo
     // const myLucky = new SlotMachine('#my-lucky', {
     //   width: '768px',

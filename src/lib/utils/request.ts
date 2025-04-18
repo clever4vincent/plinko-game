@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { toast } from '@zerodevx/svelte-toast';
-
+// import { toast } from '@zerodevx/svelte-toast';
+import { failure, toast, warning } from './my-toast';
 const service = axios.create({
-  baseURL: 'http://192.168.110.50:8005/',
-  timeout: 5 * 1000, // 请求超时时间
+  baseURL: 'https://api.done-pay.com/app',
+  timeout: 10 * 1000, // 请求超时时间
   headers: { 'Content-Type': 'application/json;charset=UTF-8' },
 });
 service.interceptors.request.use((config) => {
@@ -12,9 +12,10 @@ service.interceptors.request.use((config) => {
 service.interceptors.response.use(
   (response) => {
     const data = response.data;
-    if (data.code === 0) {
+    if (data.code === 200) {
       return data;
     } else {
+      failure(data.message);
       return Promise.reject(data);
     }
   },
@@ -46,6 +47,7 @@ const request = {
           resolve(res);
         })
         .catch((e) => {
+          console.log(e);
           reject(e);
         })
         .finally(() => {});

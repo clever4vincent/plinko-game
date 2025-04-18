@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { derived, writable } from 'svelte/store';
-  import { totalProfitHistory, winRecords } from '$lib/stores/game';
+  import { totalProfitHistory, winRecords, gameNo, token } from '$lib/stores/game';
   import { isHistoryOpen } from '$lib/stores/layout';
   import { flyAndScale } from '$lib/utils/transitions';
   import { Tooltip } from 'bits-ui';
@@ -12,9 +12,9 @@
 
   import chartIcon from '$lib/assets/icon_history.png';
   import resetIcon from '$lib/assets/reset.png';
-
+  import request from '$lib/utils/request';
   let page = 1;
-  const pageSize = 10;
+  const size = 10;
   let loading = false;
   let hasMore = true;
   let historyList: HTMLElement;
@@ -26,22 +26,30 @@
     loading = true;
     try {
       // 这里模拟加载数据，实际使用时替换为真实的数据加载逻辑
-      await new Promise((res) => setTimeout(res, 500));
-
-      // 模拟数据
-      const newRecords: HistoryRecord[] = Array.from({ length: pageSize }, (_, i) => ({
-        gameId: `record-${(page - 1) * pageSize + i}`,
-        balance: 300000,
-        time: new Date().toLocaleString(),
-        profit: Math.random() * 100 - 50,
-      }));
+      // await new Promise((res) => setTimeout(res, 500));
+      const response = await request.post('game/history', {
+        page,
+        size,
+        token: $token,
+        gameId: $gameNo,
+      });
+      console.log(response);
+      const newRecords = response.data.list;
+      // // 模拟数据
+      // const newRecords: HistoryRecord[] = Array.from({ length: pageSize }, (_, i) => ({
+      //   gameId: `record-${(page - 1) * pageSize + i}`,
+      //   balance: 300000,
+      //   amount: 1000,
+      //   time: new Date().toLocaleString(),
+      //   profit: Math.random() * 100 - 50,
+      // }));
 
       // 更新数据
       $historyListData = [...$historyListData, ...newRecords];
 
       // 更新分页状态
       page++;
-      hasMore = newRecords.length === pageSize;
+      hasMore = response.data.total > page * size;
     } finally {
       loading = false;
     }
@@ -83,17 +91,29 @@
         {#each $historyListData as record}
           <div class="flex flex-col gap-1 border-b border-[#E5A163] py-2 text-[13px]">
             <div class="flex items-center justify-between">
-              <span class=" text-[#822800]">Balance: {record.balance}</span>
+              <span class=" text-[#822800]">Balance: {record.currentGameBalance}</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class=" text-[#822800]">Profit</span>
-              <span class=" {record.profit >= 0 ? 'text-[#14c0b1]' : 'text-[#FF3434]'}">
-                {record.profit >= 0 ? '+' : ''}{record.profit.toFixed(2)}
+              <span class=" text-[#822800]">Amount</span>
+              <span class=" text-[#822800]">{record.betBalance}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class=" text-[#822800]">Reward</span>
+              <span
+                class=" {record.rewardBalance >= record.betBalance
+                  ? 'text-[#14c0b1]'
+                  : 'text-[#FF3434]'}"
+              >
+                <!-- {record.rewardBalance >= record.betBalance
+                  ? '+'
+                  : '-'} -->
+                {record.rewardBalance.toFixed(2)}
               </span>
             </div>
+
             <div class="flex items-center justify-between">
               <span class=" text-[#822800]">Time</span>
-              <span class=" text-[#822800]">{record.time}</span>
+              <span class=" text-[#822800]">{record.date}</span>
             </div>
           </div>
         {/each}
